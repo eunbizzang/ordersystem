@@ -2,10 +2,16 @@ package sist;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,17 +19,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.toedter.calendar.JDateChooser;
+
 public class Admin_Revenue_Ranking extends JFrame {
 
 	JPanel contentPane;
-	JTextField textField1;
-	JTextField textField2;
 	JTable table1, table2, table3;
 	DefaultTableModel model1, model2, model3;
 	
@@ -39,6 +44,7 @@ public class Admin_Revenue_Ranking extends JFrame {
 	public Admin_Revenue_Ranking(String d1, String d2) {
 		this.d1 = d1;
 		this.d2 = d2;
+		connect();
 		
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 400);
@@ -50,39 +56,43 @@ public class Admin_Revenue_Ranking extends JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(44, 21, 579, 72);
+		panel.setBounds(53, 50, 556, 41);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("선택 기간");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-		lblNewLabel.setBounds(69, 23, 87, 29);
-		panel.add(lblNewLabel);
+		JLabel Period_Label = new JLabel("선택 기간");
+		Period_Label.setHorizontalAlignment(SwingConstants.CENTER);
+		Period_Label.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+		Period_Label.setBounds(0, 10, 87, 29);
+		panel.add(Period_Label);
 		
-		textField1 = new JTextField();
-		textField1.setHorizontalAlignment(SwingConstants.CENTER);
-		textField1.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-		textField1.setBounds(169, 21, 156, 34);
-		panel.add(textField1);
-		textField1.setColumns(10);
-		textField1.setEditable(false);
-		textField1.setText(d1);
 		
-		textField2 = new JTextField();
-		textField2.setHorizontalAlignment(SwingConstants.CENTER);
-		textField2.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-		textField2.setBounds(374, 21, 143, 34);
-		panel.add(textField2);
-		textField2.setColumns(10);
-		textField2.setEditable(false);
-		textField2.setText(d2);
+		JLabel MainLabel = new JLabel("메뉴별 매출");
+		MainLabel.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+		MainLabel.setBounds(54, 10, 310, 41);
+		contentPane.add(MainLabel);
+
+		JDateChooser dateChooser1 = new JDateChooser();
+		dateChooser1.getCalendarButton().setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+		dateChooser1.setBounds(99, 10, 143, 29);
+		panel.add(dateChooser1);
+
+		JLabel Label = new JLabel("-");
+		Label.setFont(new Font("굴림", Font.PLAIN, 18));
+		Label.setHorizontalAlignment(SwingConstants.CENTER);
+		Label.setBounds(254, 17, 38, 15);
+		panel.add(Label);
 		
-		JLabel lblNewLabel_1 = new JLabel("-");
-		lblNewLabel_1.setFont(new Font("굴림", Font.PLAIN, 18));
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setBounds(334, 30, 38, 15);
-		panel.add(lblNewLabel_1);
+		JDateChooser dateChooser2 = new JDateChooser();
+		dateChooser2.getCalendarButton().setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+		dateChooser2.setBounds(300, 10, 143, 29);
+		panel.add(dateChooser2);
+		
+		JButton Check_Button = new JButton("검색");
+		Check_Button.setBackground(new Color(255, 228, 225));
+		Check_Button.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+		Check_Button.setBounds(473, 10, 71, 28);
+		panel.add(Check_Button);
 		
 		String[] header = {"메뉴", "주문수량", "매출"};
 		
@@ -133,16 +143,35 @@ public class Admin_Revenue_Ranking extends JFrame {
 		c0_Button.setBounds(431, 103, 192, 35);
 		contentPane.add(c0_Button);
 		
-		JLabel lblNewLabel_2 = new JLabel("안주");
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setIcon(null);
-		lblNewLabel_2.setForeground(new Color(0, 0, 0));
-		lblNewLabel_2.setBackground(new Color(255, 228, 225));
-		lblNewLabel_2.setBounds(44, 103, 192, 35);
-		contentPane.add(lblNewLabel_2);
 		
-		connect();
-		select(d1, d2);
+		if(d1 != null) {
+			try {
+				SimpleDateFormat fm = new SimpleDateFormat("yyyy/MM/dd");
+				Date date1 = fm.parse(d1);
+				Date date2 = fm.parse(d2);
+				dateChooser1.setDate(date1);
+				dateChooser2.setDate(date2);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			select(d1, d2);
+		}
+		Check_Button.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+				String newd1 = dateFormat.format(dateChooser1.getDate());
+				String newd2 = dateFormat.format(dateChooser2.getDate());
+				model1.setRowCount(0);
+				model2.setRowCount(0);
+				model3.setRowCount(0);
+				select(newd1,newd2);
+			}
+		});
+		
+		
 	}
 
 	// DB와 연동하는 메서드
