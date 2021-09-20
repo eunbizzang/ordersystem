@@ -63,7 +63,7 @@ public class Admin_Revenue extends JFrame {
 	 * Create the frame.
 	 */
 	public Admin_Revenue() {
-		
+		connect();
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -165,8 +165,6 @@ public class Admin_Revenue extends JFrame {
 				if(dateChooser1.getDate() == null) {
 					JOptionPane.showMessageDialog(null, "기간을 선택 해 주세요.");
 				}else {
-				connect();
-				
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 				d1 = dateFormat.format(dateChooser1.getDate());
 				d2 = dateFormat.format(dateChooser2.getDate());
@@ -190,11 +188,9 @@ public class Admin_Revenue extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				if(dateChooser1.getDate() == null) {
-					JOptionPane.showMessageDialog(null, "기간을 선택 해 주세요.");
-				}else {
+				
 				new Admin_Revenue_Ranking(d1,d2);
-				}
+				
 			}
 		});
 		
@@ -261,7 +257,7 @@ public class Admin_Revenue extends JFrame {
 				Total_Text.setText(total);
 			}
 				// 5. 연결되어 있던 객체 닫기.
-				rs1.close(); rs2.close(); pstmt1.close(); pstmt2.close(); con.close();
+				rs1.close(); rs2.close(); pstmt1.close(); pstmt2.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, "에러발생");
