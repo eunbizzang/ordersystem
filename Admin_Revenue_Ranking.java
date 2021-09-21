@@ -1,28 +1,12 @@
 package sist;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.awt.*;
+import java.sql.C*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.*;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -33,9 +17,9 @@ public class Admin_Revenue_Ranking extends JFrame {
 	DefaultTableModel model1, model2, model3;
 	
 	Connection con = null;						// DB와 연결하는 객체.
-	PreparedStatement pstmt1, pstmt2, pstmt3 = null;				// SQL문을 DB에 전송하는 객체.
-	ResultSet rs1, rs2, rs3 = null;						// SQL문 실행 결과를 가지고 있는 객체.
-	String d1, d2;
+	PreparedStatement pstmt1, pstmt2, pstmt3 = null;		// SQL문을 DB에 전송하는 객체.
+	ResultSet rs1, rs2, rs3 = null;					// SQL문 실행 결과를 가지고 있는 객체.
+	String d1, d2;							// Admin_Revenue페이지에서 받아온 date값을 저장하는 String객체.
 
 	/**
 	 * Launch the application.
@@ -46,6 +30,7 @@ public class Admin_Revenue_Ranking extends JFrame {
 		this.d2 = d2;
 		connect();
 		
+		// 창 닫았을 때 기간선택화면으로 돌아가기 위해 주석처리
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 400);
 		setVisible(true);
@@ -60,47 +45,53 @@ public class Admin_Revenue_Ranking extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
+		// 선택 기간 라벨
 		JLabel Period_Label = new JLabel("선택 기간");
 		Period_Label.setHorizontalAlignment(SwingConstants.CENTER);
 		Period_Label.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 		Period_Label.setBounds(0, 10, 87, 29);
 		panel.add(Period_Label);
 		
-		
+		// 메뉴별 매출 라벨
 		JLabel MainLabel = new JLabel("메뉴별 매출");
 		MainLabel.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 		MainLabel.setBounds(54, 10, 310, 41);
 		contentPane.add(MainLabel);
 
+		// 날짜 선택 (첫번째)
 		JDateChooser dateChooser1 = new JDateChooser();
 		dateChooser1.getCalendarButton().setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 		dateChooser1.setBounds(99, 10, 143, 29);
 		panel.add(dateChooser1);
 
+		// - 라벨
 		JLabel Label = new JLabel("-");
 		Label.setFont(new Font("굴림", Font.PLAIN, 18));
 		Label.setHorizontalAlignment(SwingConstants.CENTER);
 		Label.setBounds(254, 17, 38, 15);
 		panel.add(Label);
 		
+		// 날짜 선택 (두번째)
 		JDateChooser dateChooser2 = new JDateChooser();
 		dateChooser2.getCalendarButton().setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 		dateChooser2.setBounds(300, 10, 143, 29);
 		panel.add(dateChooser2);
 		
+		// 검색 버튼
 		JButton Check_Button = new JButton("검색");
 		Check_Button.setBackground(new Color(255, 228, 225));
 		Check_Button.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 		Check_Button.setBounds(473, 10, 71, 28);
 		panel.add(Check_Button);
 		
+		// 검색결과를 표시 할 테이블의 헤더설정
 		String[] header = {"메뉴", "주문수량", "매출"};
 		
 		model1 = new DefaultTableModel(header, 0);  // row count 일단 타이틀만 만들기 위해 0으로 설정
 		model2 = new DefaultTableModel(header, 0);
 		model3 = new DefaultTableModel(header, 0);
 		
-		
+		// 안주 메뉴 주문량을 순서대로 표시 할 테이블
 		table1 = new JTable(model1);
 		JScrollPane jsp1 = new JScrollPane(
 				table1,
@@ -109,6 +100,7 @@ public class Admin_Revenue_Ranking extends JFrame {
 		jsp1.setBounds(44, 136, 192, 192);
 		contentPane.add(jsp1);
 		
+		// 음료 메뉴 주문량을 순서대로 표시 할 테이블
 		table2 = new JTable(model2);
 		JScrollPane jsp2 = new JScrollPane(
 				table2,
@@ -117,6 +109,7 @@ public class Admin_Revenue_Ranking extends JFrame {
 		jsp2.setBounds(238, 136, 192, 192);
 		getContentPane().add(jsp2);
 		
+		// 주류 메뉴 주문량을 순서대로 표시 할 테이블
 		table3 = new JTable(model3);
 		JScrollPane jsp3 = new JScrollPane(
 				table3,
@@ -125,25 +118,28 @@ public class Admin_Revenue_Ranking extends JFrame {
 		jsp3.setBounds(431, 136, 192, 192);
 		getContentPane().add(jsp3);
 		
+		// 안주 문구 표시 버튼
 		JButton a0_Button = new JButton("안주");
 		a0_Button.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		a0_Button.setBackground(new Color(255, 228, 225));
 		a0_Button.setBounds(44, 103, 192, 35);
 		contentPane.add(a0_Button);
 		
+		// 음료 문구 표시 버튼
 		JButton b0_Button = new JButton("음료");
 		b0_Button.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		b0_Button.setBackground(new Color(255, 228, 225));
 		b0_Button.setBounds(238, 103, 192, 35);
 		contentPane.add(b0_Button);
 		
+		// 주류 문구 표시 버튼
 		JButton c0_Button = new JButton("주류");
 		c0_Button.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
 		c0_Button.setBackground(new Color(255, 228, 225));
 		c0_Button.setBounds(431, 103, 192, 35);
 		contentPane.add(c0_Button);
 		
-		
+		// d1에 값이 들어있는지 확인 후 값이 있을 경우, 그 값을 dateChooser에 표시 
 		if(d1 != null) {
 			try {
 				SimpleDateFormat fm = new SimpleDateFormat("yyyy/MM/dd");
@@ -155,6 +151,7 @@ public class Admin_Revenue_Ranking extends JFrame {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			// select기능을 불러옴
 			select(d1, d2);
 		}
 		Check_Button.addActionListener(new ActionListener() {
@@ -193,21 +190,25 @@ public class Admin_Revenue_Ranking extends JFrame {
 				JOptionPane.showMessageDialog(null, "DB연결 에러발생");
 		}
 	}  // connect() 메서드 end
+	
+	// d1,d2 사이 기간의 주문 내역을 불러오는 메서드
 	void select(String d1, String d2) {
 		try {
+			// 안주, 음료, 주류 테이블에 반복적으로 사용되는 sql문
 			String sqlsame = "SELECT MENU_NAME, SUM(MENU_COUNT) AS COUNT, SUM(MENU_COUNT* MENU_PRICE) as total " + 
 					"FROM A_OORDER o left join A_MENU m " + 
 					"ON O.MENU_ID = M.MENU_ID " + 
 					"where o.paid = 'O' and o.order_time between to_date('"+d1+"' , 'YYYY/MM/DD') and to_date('"+d2+"' || ' 23:59:59', 'YYYY/MM/DD HH24:MI:SS') " + 
 					"and o.menu_id like";
+			// 안주 테이블에 표시 할 안주 주문 내역을 불러오는 sql문
 			String sql1 = sqlsame+ " 'a0%' " + 
 					"GROUP BY M.MENU_NAME " + 
 					"ORDER BY SUM(MENU_COUNT) DESC";
-			
+			// 음료 테이블에 표시 할 음료 주문 내역을 불러오는 sql문
 			String sql2 = sqlsame+ " 'b0%' " + 
 					"GROUP BY M.MENU_NAME " + 
 					"ORDER BY SUM(MENU_COUNT) DESC";
-			
+			// 주류 테이블에 표시 할 주류 주문 내역을 불러오는 sql문
 			String sql3 = sqlsame+ " 'c0%' " + 
 					"GROUP BY M.MENU_NAME " + 
 					"ORDER BY SUM(MENU_COUNT) DESC";
