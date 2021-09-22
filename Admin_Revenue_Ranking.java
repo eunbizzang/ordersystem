@@ -154,6 +154,7 @@ public class Admin_Revenue_Ranking extends JFrame {
 			// select기능을 불러옴
 			select(d1, d2);
 		}
+		// 새로운 날짜가 입력되고 버튼이 눌리게 되면 테이블 내용을 리셋하고 새로운 date값을 입력해서 테이블 내용을 select
 		Check_Button.addActionListener(new ActionListener() {
 
 			@Override
@@ -212,10 +213,12 @@ public class Admin_Revenue_Ranking extends JFrame {
 			String sql3 = sqlsame+ " 'c0%' " + 
 					"GROUP BY M.MENU_NAME " + 
 					"ORDER BY SUM(MENU_COUNT) DESC";
+			// sql1,2,3을 연결
 			pstmt1 = con.prepareStatement(sql1);
 			pstmt2 = con.prepareStatement(sql2);
 			pstmt3 = con.prepareStatement(sql3);
 			
+			// sql문 실행(안주 테이블)
 			rs1 = pstmt1.executeQuery();
 			while(rs1.next()) {
 				String mname = rs1.getString("menu_name");
@@ -229,6 +232,7 @@ public class Admin_Revenue_Ranking extends JFrame {
 				model1.addRow(data);
 				}
 			
+			// sql문 실행(음료 테이블)
 			rs2 = pstmt2.executeQuery();
 			while(rs2.next()) {
 				String mname = rs2.getString("menu_name");
@@ -242,6 +246,7 @@ public class Admin_Revenue_Ranking extends JFrame {
 				model2.addRow(data);
 				}
 			
+			// sql문 실행(주류 테이블)
 			rs3 = pstmt3.executeQuery();
 			while(rs3.next()) {
 				String mname = rs3.getString("menu_name");
