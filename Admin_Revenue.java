@@ -64,6 +64,7 @@ public class Admin_Revenue extends JFrame {
 	 */
 	public Admin_Revenue() {
 		connect();
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -74,23 +75,26 @@ public class Admin_Revenue extends JFrame {
 		contentPane.add(panel1);
 		panel1.setLayout(null);
 		
+		// 매출 조회 라벨
 		JLabel Revenue = new JLabel("매출조회");
 		Revenue.setBounds(0, 15, 167, 40);
 		Revenue.setHorizontalAlignment(SwingConstants.CENTER);
 		Revenue.setFont(new Font("맑은 고딕", Font.BOLD, 25));
 		panel1.add(Revenue);
 		
+		// 뒤로가기 버튼
 		JButton btnNewButton = new JButton("뒤로가기");
 		btnNewButton.setBackground(new Color(255, 228, 225));
 		btnNewButton.setBounds(786, 10, 91, 30);
 		panel1.add(btnNewButton);
 		
-		
+		// 테이블 헤더 작성
 		String[] header = {"주문번호", "메뉴명", "가격", "주문수량", "합계", "주문시간"};
 		
 		model = new DefaultTableModel(header, 0);  // row count 일단 타이틀만 만들기 위해 0으로 설정
-		
+		// 테이블에 헤더 추가
 		table = new JTable(model);
+		// 스크롤 위에 테이블 
 		JScrollPane jsp = new JScrollPane(
 				table,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -98,49 +102,58 @@ public class Admin_Revenue extends JFrame {
 		jsp.setBounds(39, 192, 889, 338);
 		getContentPane().add(jsp);
 		
+		// 기간 선택 부분 올릴 panel
 		JPanel panel3 = new JPanel();
 		panel3.setBounds(39, 67, 889, 126);
 		contentPane.add(panel3);
 		panel3.setLayout(null);
 		
+		// 기간 - 라벨
 		Label = new JLabel("-");
 		Label.setBounds(217, 41, 40, 33);
 		Label.setHorizontalAlignment(SwingConstants.CENTER);
 		Label.setFont(new Font("맑은 고딕", Font.PLAIN, 20));
 		panel3.add(Label);
 		
+		// 조회 버튼
 		JButton Check_Button = new JButton("조회");
 		Check_Button.setBounds(473, 45, 63, 29);
 		Check_Button.setBackground(new Color(255, 228, 225));
 		Check_Button.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
 		panel3.add(Check_Button);
 		
+		// 기간 선택 라벨
 		JLabel Period = new JLabel("조회 기간을 선택 해 주세요.");
 		Period.setBounds(32, 10, 305, 33);
 		Period.setFont(new Font("맑은 고딕", Font.PLAIN, 17));
 		panel3.add(Period);
 		
+		// 첫번째 날짜
 		JDateChooser dateChooser1 = new JDateChooser();
 		dateChooser1.getCalendarButton().setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 		dateChooser1.setBounds(32, 46, 173, 29);
 		panel3.add(dateChooser1);
 		
+		// 두번째 날짜
 		JDateChooser dateChooser2 = new JDateChooser();
 		dateChooser2.getCalendarButton().setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 		dateChooser2.setBounds(271, 46, 173, 29);
 		panel3.add(dateChooser2);
 		
+		// 전체 주문 내역 라벨
 		JLabel Order_Label = new JLabel("전체 주문 내역");
 		Order_Label.setHorizontalAlignment(SwingConstants.CENTER);
 		Order_Label.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 		Order_Label.setBounds(0, 85, 913, 41);
 		panel3.add(Order_Label);
 		
+		// 메뉴별 주문조회 버튼
 		JButton Menucheck_Button = new JButton("메뉴별 주문조회");
 		Menucheck_Button.setBackground(new Color(255, 228, 225));
 		Menucheck_Button.setBounds(564, 44, 146, 29);
 		panel3.add(Menucheck_Button);
 		
+		// 합계 텍스트필드 생성
 		Total_Text = new JTextField();
 		Total_Text.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 		Total_Text.setBounds(795, 540, 133, 28);
@@ -148,6 +161,7 @@ public class Admin_Revenue extends JFrame {
 		Total_Text.setColumns(10);
 		Total_Text.setEditable(false);
 		
+		// 매출 총계 라벨
 		JLabel Total_Label = new JLabel("매출 총계");
 		Total_Label.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 		Total_Label.setBounds(708, 539, 75, 28);
@@ -162,7 +176,7 @@ public class Admin_Revenue extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				if(dateChooser1.getDate() == null) {
+				if(dateChooser1.getDate() == null || dateChooser2.getDate() == null) {
 					JOptionPane.showMessageDialog(null, "기간을 선택 해 주세요.");
 				}else {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -182,7 +196,7 @@ public class Admin_Revenue extends JFrame {
 				}
 			}
 		});
-		
+		// 메뉴 순위 확인 버튼을 누르면 확인 창 팝업
 		Menucheck_Button.addActionListener(new ActionListener() {
 			
 			@Override
@@ -194,12 +208,31 @@ public class Admin_Revenue extends JFrame {
 			}
 		});
 		
+		// 뒤로가기 
+		btnNewButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				new Admin_Main();
+				dispose();
+			}
+		});
+		
 	}// 생성자 end
 	
 	// DB와 연동하는 메서드
 	void connect() {
+		
+		/*
+		 * String driver = "oracle.jdbc.driver.OracleDriver"; 
+		 * String url =
+		 * "jdbc:oracle:thin:@localhost:1521:xe"; String user = "web"; String password =
+		 * "1234";
+		 */
+		
 		String driver = "oracle.jdbc.driver.OracleDriver"; 
-		String url = "jdbc:oracle:thin:@localhost:1521:xe"; 
+		String url = "jdbc:oracle:thin:@59.16.32.131:1521:xe"; 
 		String user = "web"; 
 		String password = "1234";
 				
@@ -217,16 +250,17 @@ public class Admin_Revenue extends JFrame {
 	}  // connect() 메서드 end
 		
 	// dept 테이블의 전체 내역을 조회하는 메서드.
+
 	void select() {
 			
 		try {
 			// 1. 데이터베이스에 SQL문을 전송하기 위한 쿼리문 작성.
-			String sql1 = "select order_id, menu_name, menu_price, menu_count, (menu_price * menu_count) as fprice, order_time from A_OORDER o left join A_MENU m "
+			String sql1 = "select order_id, menu_name, menu_price, menu_count, (menu_price * menu_count) as fprice, order_time from A_ORDER o left join A_MENU m "
 					+ "on m.menu_id = o.menu_id "
 					+ "where o.paid = 'O' and o.order_time between to_date('"+d1+"' , 'YYYY/MM/DD') and to_date('"+d2+"' || ' 23:59:59', 'YYYY/MM/DD HH24:MI:SS')"
 					+ "order by order_time desc";
 			
-			String sql2 = "select sum(menu_price * menu_count) as total from A_OORDER o left join A_MENU m "
+			String sql2 = "select sum(menu_price * menu_count) as total from A_ORDER o left join A_MENU m "
 					+ "on m.menu_id = o.menu_id "
 					+ "where o.paid = 'O' and o.order_time between to_date('"+d1+"', 'YYYY/MM/DD') and to_date('"+d2+"' || ' 23:59:59', 'YYYY/MM/DD HH24:MI:SS')";
 			
