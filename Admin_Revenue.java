@@ -36,10 +36,9 @@ public class Admin_Revenue extends JFrame {
 	DefaultTableModel model;
 	JTable table;
 	JLabel Label;
-
+	JLabel Total_Label;
 	//java.sql.Date sqldate1, sqldate2;
 	String d1, d2;
-	JTextField Total_Text;
 	/**
 	 * Launch the application.
 	 */
@@ -66,109 +65,98 @@ public class Admin_Revenue extends JFrame {
 		connect();
 		
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 	
 		JPanel panel1 = new JPanel();
-		panel1.setBounds(39, 0, 889, 67);
+		panel1.setBackground(Color.WHITE);
+		panel1.setBounds(27, 0, 859, 67);
 		contentPane.add(panel1);
 		panel1.setLayout(null);
 		
 		// 매출 조회 라벨
 		JLabel Revenue = new JLabel("매출조회");
-		Revenue.setBounds(0, 15, 167, 40);
+		Revenue.setBounds(12, 27, 110, 40);
 		Revenue.setHorizontalAlignment(SwingConstants.CENTER);
 		Revenue.setFont(new Font("맑은 고딕", Font.BOLD, 25));
 		panel1.add(Revenue);
 		
 		// 뒤로가기 버튼
 		JButton btnNewButton = new JButton("뒤로가기");
+		btnNewButton.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 		btnNewButton.setBackground(new Color(255, 228, 225));
-		btnNewButton.setBounds(786, 10, 91, 30);
+		btnNewButton.setBounds(746, 36, 101, 30);
 		panel1.add(btnNewButton);
 		
 		// 테이블 헤더 작성
 		String[] header = {"주문번호", "메뉴명", "가격", "주문수량", "합계", "주문시간"};
 		
 		model = new DefaultTableModel(header, 0);  // row count 일단 타이틀만 만들기 위해 0으로 설정
-		// 테이블에 헤더 추가
+		
 		table = new JTable(model);
-		// 스크롤 위에 테이블 
+		table.setBackground(Color.WHITE);
 		JScrollPane jsp = new JScrollPane(
 				table,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		jsp.setBounds(39, 192, 889, 338);
+		jsp.setBounds(37, 148, 841, 370);
 		getContentPane().add(jsp);
 		
 		// 기간 선택 부분 올릴 panel
 		JPanel panel3 = new JPanel();
-		panel3.setBounds(39, 67, 889, 126);
+		panel3.setBackground(Color.WHITE);
+		panel3.setBounds(27, 66, 859, 82);
 		contentPane.add(panel3);
 		panel3.setLayout(null);
 		
 		// 기간 - 라벨
 		Label = new JLabel("-");
-		Label.setBounds(217, 41, 40, 33);
+		Label.setBounds(173, 41, 40, 33);
 		Label.setHorizontalAlignment(SwingConstants.CENTER);
 		Label.setFont(new Font("맑은 고딕", Font.PLAIN, 20));
 		panel3.add(Label);
 		
 		// 조회 버튼
 		JButton Check_Button = new JButton("조회");
-		Check_Button.setBounds(473, 45, 63, 29);
+		Check_Button.setBounds(405, 45, 79, 29);
 		Check_Button.setBackground(new Color(255, 228, 225));
-		Check_Button.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+		Check_Button.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 		panel3.add(Check_Button);
 		
 		// 기간 선택 라벨
-		JLabel Period = new JLabel("조회 기간을 선택 해 주세요.");
-		Period.setBounds(32, 10, 305, 33);
-		Period.setFont(new Font("맑은 고딕", Font.PLAIN, 17));
+		JLabel Period = new JLabel("조회 기간을 선택해 주세요");
+		Period.setBounds(12, 10, 257, 33);
+		Period.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 		panel3.add(Period);
 		
 		// 첫번째 날짜
 		JDateChooser dateChooser1 = new JDateChooser();
 		dateChooser1.getCalendarButton().setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-		dateChooser1.setBounds(32, 46, 173, 29);
+		dateChooser1.setBounds(10, 45, 151, 29);
 		panel3.add(dateChooser1);
 		
 		// 두번째 날짜
 		JDateChooser dateChooser2 = new JDateChooser();
 		dateChooser2.getCalendarButton().setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-		dateChooser2.setBounds(271, 46, 173, 29);
+		dateChooser2.setBounds(223, 45, 151, 29);
 		panel3.add(dateChooser2);
-		
-		// 전체 주문 내역 라벨
-		JLabel Order_Label = new JLabel("전체 주문 내역");
-		Order_Label.setHorizontalAlignment(SwingConstants.CENTER);
-		Order_Label.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-		Order_Label.setBounds(0, 85, 913, 41);
-		panel3.add(Order_Label);
 		
 		// 메뉴별 주문조회 버튼
 		JButton Menucheck_Button = new JButton("메뉴별 주문조회");
+		Menucheck_Button.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 		Menucheck_Button.setBackground(new Color(255, 228, 225));
-		Menucheck_Button.setBounds(564, 44, 146, 29);
+		Menucheck_Button.setBounds(496, 45, 146, 29);
 		panel3.add(Menucheck_Button);
 		
-		// 합계 텍스트필드 생성
-		Total_Text = new JTextField();
-		Total_Text.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-		Total_Text.setBounds(795, 540, 133, 28);
-		contentPane.add(Total_Text);
-		Total_Text.setColumns(10);
-		Total_Text.setEditable(false);
-		
-		// 매출 총계 라벨
-		JLabel Total_Label = new JLabel("매출 총계");
-		Total_Label.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-		Total_Label.setBounds(708, 539, 75, 28);
+		Total_Label = new JLabel("매출 총계  :  ");
+		Total_Label.setFont(new Font("맑은 고딕", Font.PLAIN, 18));
+		Total_Label.setBounds(687, 528, 191, 35);
 		contentPane.add(Total_Label);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1000, 650);
+		setBounds(100, 100, 925, 629);
 		setVisible(true);
 		
 		Check_Button.addActionListener(new ActionListener() {
@@ -196,7 +184,7 @@ public class Admin_Revenue extends JFrame {
 				}
 			}
 		});
-		// 메뉴 순위 확인 버튼을 누르면 확인 창 팝업
+		
 		Menucheck_Button.addActionListener(new ActionListener() {
 			
 			@Override
@@ -208,7 +196,7 @@ public class Admin_Revenue extends JFrame {
 			}
 		});
 		
-		// 뒤로가기 
+		
 		btnNewButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -224,18 +212,12 @@ public class Admin_Revenue extends JFrame {
 	// DB와 연동하는 메서드
 	void connect() {
 		
-		/*
-		 * String driver = "oracle.jdbc.driver.OracleDriver"; 
-		 * String url =
-		 * "jdbc:oracle:thin:@localhost:1521:xe"; String user = "web"; String password =
-		 * "1234";
-		 */
 		
 		String driver = "oracle.jdbc.driver.OracleDriver"; 
-		String url = "jdbc:oracle:thin:@59.16.32.131:1521:xe"; 
+		String url = "jdbc:oracle:thin:@localhost:1521:xe"; 
 		String user = "web"; 
 		String password = "1234";
-				
+		
 		try {
 			// 1. 접속할 오라클 드라이버를 메모리로 로딩.
 			Class.forName(driver);
@@ -288,7 +270,7 @@ public class Admin_Revenue extends JFrame {
 				
 			if(rs2.next()) {
 				String total = String.valueOf(rs2.getInt("total"));
-				Total_Text.setText(total);
+				Total_Label.setText("매출 총계  :  " + total + " 원");
 			}
 				// 5. 연결되어 있던 객체 닫기.
 				rs1.close(); rs2.close(); pstmt1.close(); pstmt2.close();
